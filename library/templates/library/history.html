@@ -1,0 +1,88 @@
+{% extends "library/base.html" %}
+
+{% block title %}History{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <div class="page-label">Member History</div>
+
+        <h1>Borrowing History</h1>
+
+        {% if member %}
+            <p>
+                Borrowing activity for
+                <strong>{{ member.name }}</strong>
+            </p>
+        {% endif %}
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    {% if member %}
+
+        <h2>{{ member.name }}</h2>
+
+        {% for item in history %}
+
+        <div class="card">
+
+            <h2>
+                {{ item.book.title }}
+            </h2>
+
+            <p>
+                <strong>Borrowed:</strong>
+                {{ item.borrowed_at }}
+            </p>
+
+            <p>
+                <strong>Returned:</strong>
+                {{ item.returned_at|default:"Not returned yet" }}
+            </p>
+
+        </div>
+
+        {% empty %}
+
+        <p>
+            No borrowing history.
+        </p>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>
+            Member not found.
+        </p>
+
+    {% endif %}
+
+</div>
+
+
+<div class="hero-actions">
+
+    <a
+        href="{% url 'member_list' %}"
+        class="secondary-button"
+    >
+        ← Back to Members
+    </a>
+
+    <a
+        href="{% url 'home' %}"
+        class="back-button"
+    >
+        ← Back to Home
+    </a>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends "library/base.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+
+    <div class="hero-label">
+        Library Management
+    </div>
+
+    <h1>
+        Welcome to your library
+    </h1>
+
+    <p>
+        Manage books, members, borrowing and library activity
+        in one simple and organized place.
+    </p>
+
+    <div class="hero-actions">
+
+        <a
+            href="{% url 'book_list' %}"
+            class="primary-button"
+        >
+            Explore Books
+        </a>
+
+        <a
+            href="{% url 'borrow_book' %}"
+            class="secondary-button"
+        >
+            Borrow a Book
+        </a>
+
+    </div>
+
+</section>
+
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+
+        <span>
+            Total Books
+        </span>
+
+        <strong>
+            {{ total_books }}
+        </strong>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <span>
+            Available Books
+        </span>
+
+        <strong>
+            {{ available_books }}
+        </strong>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <span>
+            Borrowed Books
+        </span>
+
+        <strong>
+            {{ borrowed_books }}
+        </strong>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <span>
+            Total Members
+        </span>
+
+        <strong>
+            {{ total_members }}
+        </strong>
+
+    </div>
+
+</div>
+
+
+<h2 class="section-title">
+    Quick Access
+</h2>
+
+
+<div class="quick-links">
+
+    <a
+        href="{% url 'book_list' %}"
+        class="quick-link"
+    >
+
+        <h3>
+            Books
+        </h3>
+
+        <p>
+            View, add, edit and manage your books.
+        </p>
+
+    </a>
+
+
+    <a
+        href="{% url 'member_list' %}"
+        class="quick-link"
+    >
+
+        <h3>
+            Members
+        </h3>
+
+        <p>
+            View library members and their borrowing history.
+        </p>
+
+    </a>
+
+
+    <a
+        href="{% url 'statistics' %}"
+        class="quick-link"
+    >
+
+        <h3>
+            Statistics
+        </h3>
+
+        <p>
+            See an overview of your library activity.
+        </p>
+
+    </a>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "library/base.html" %}
+
+{% block title %}Borrow Book{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <div class="page-label">Library Service</div>
+
+        <h1>Borrow a Book</h1>
+
+        <p>
+            Select a book and a member to create a borrowing record.
+        </p>
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    {% if books %}
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        <p>
+            <label for="book_id">
+                <strong>Book</strong>
+            </label>
+        </p>
+
+        <select
+            id="book_id"
+            name="book_id"
+            required
+        >
+
+            {% for book in books %}
+
+            <option value="{{ book.id }}">
+                {{ book.title }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <p>
+            <label for="member_id">
+                <strong>Member</strong>
+            </label>
+        </p>
+
+        <select
+            id="member_id"
+            name="member_id"
+            required
+        >
+
+            {% for member in members %}
+
+            <option value="{{ member.id }}">
+                {{ member.name }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <br><br>
+
+        <button type="submit">
+            Borrow Book
+        </button>
+
+    </form>
+
+    {% else %}
+
+    <p>
+        All books are currently borrowed.
+    </p>
+
+    {% endif %}
+
+
+    {% if message %}
+
+    <p>
+        <strong>{{ message }}</strong>
+    </p>
+
+    {% endif %}
+
+</div>
+
+
+<a href="{% url 'home' %}" class="back-button">
+    ← Back to Home
+</a>
+
+{% endblock %}

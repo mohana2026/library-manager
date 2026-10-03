@@ -1,0 +1,68 @@
+{% extends "library/base.html" %}
+
+{% block title %}History{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <div class="page-label">Library Activity</div>
+
+        <h1>Borrowing History</h1>
+
+        <p>
+            Select a member to view their borrowing history.
+        </p>
+    </div>
+
+</div>
+
+
+<div class="books-grid">
+
+    {% for member in members %}
+
+    <div class="book-card">
+
+        <h2>{{ member.name }}</h2>
+
+        <p class="book-author">
+            {{ member.email }}
+        </p>
+
+        <div class="book-actions">
+
+            <a
+                href="{% url 'history' member.id %}"
+                class="edit-button"
+            >
+                View History
+            </a>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <div class="empty-state">
+
+        <h2>No Members Found</h2>
+
+        <p>
+            There is no borrowing history yet.
+        </p>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+
+<a href="{% url 'home' %}" class="back-button">
+    ← Back to Home
+</a>
+
+{% endblock %}

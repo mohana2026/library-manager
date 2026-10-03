@@ -1,0 +1,1340 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}Library Management{% endblock %}
+    </title>
+
+    <style>
+
+        /* =========================
+           GLOBAL
+        ========================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+
+            min-height: 100vh;
+
+            font-family: Arial, sans-serif;
+
+            color: #3d3026;
+
+            background-color: #e8d8c8;
+
+            background-image:
+                linear-gradient(
+                    rgba(228, 211, 194, 0.70),
+                    rgba(228, 211, 194, 0.70)
+                ),
+                url("{% static 'library/library-bg.png' %}");
+
+            background-size: cover;
+
+            background-position: center;
+
+            background-attachment: fixed;
+
+            background-repeat: no-repeat;
+        }
+
+
+        /* =========================
+           NAVBAR
+        ========================== */
+
+        nav {
+            position: sticky;
+
+            top: 0;
+
+            z-index: 100;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 17px 30px;
+
+            background: rgba(91, 62, 43, 0.96);
+
+            box-shadow:
+                0 5px 18px rgba(80, 55, 37, 0.20);
+        }
+
+
+        nav a {
+            color: #fffaf5;
+
+            text-decoration: none;
+
+            padding: 10px 14px;
+
+            border-radius: 9px;
+
+            font-weight: 600;
+
+            transition:
+                background-color 0.25s ease,
+                color 0.25s ease,
+                transform 0.25s ease;
+        }
+
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.14);
+
+            color: #ffffff;
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================
+           MAIN CONTAINER
+        ========================== */
+
+        .container {
+            width: 92%;
+
+            max-width: 1100px;
+
+            margin: 45px auto;
+        }
+
+
+        /* =========================
+           PAGE HEADER
+        ========================== */
+
+        .page-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 30px;
+
+            padding: 30px;
+
+            margin-bottom: 28px;
+
+            background: rgba(255, 255, 255, 0.94);
+
+            border: 1px solid #eadfd3;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 10px 28px rgba(79, 56, 38, 0.14);
+
+            transition:
+                transform 0.35s ease,
+                box-shadow 0.35s ease;
+        }
+
+
+        .page-header:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 16px 32px rgba(79, 56, 38, 0.18);
+        }
+
+
+        .page-label {
+            color: #8b6245;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 8px;
+        }
+
+
+        .page-header h1 {
+            margin: 0 0 8px;
+
+            color: #4a3424;
+
+            font-size: 40px;
+        }
+
+
+        .page-header p {
+            margin: 0;
+
+            color: #705f50;
+        }
+
+
+        /* =========================
+           SEARCH
+        ========================== */
+
+        .search-form {
+            display: flex;
+
+            gap: 10px;
+
+            align-items: center;
+
+            margin-top: 22px;
+        }
+
+
+        .search-form input {
+            flex: 1;
+
+            max-width: none;
+        }
+
+
+        .search-form button {
+            white-space: nowrap;
+        }
+
+
+        /* =========================
+           ADD BOOK BUTTON
+        ========================== */
+
+        .add-book-button {
+            display: inline-block;
+
+            background: #805637;
+
+            color: white !important;
+
+            padding: 13px 20px;
+
+            border-radius: 10px;
+
+            font-weight: 700;
+
+            white-space: nowrap;
+
+            box-shadow:
+                0 6px 15px rgba(91, 62, 43, 0.18);
+
+            transition:
+                background-color 0.25s ease,
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+
+        .add-book-button:hover {
+            background: #65432c;
+
+            color: white !important;
+
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 10px 20px rgba(91, 62, 43, 0.22);
+        }
+
+
+        /* =========================
+           BOOK GRID
+        ========================== */
+
+        .books-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 22px;
+        }
+
+
+        /* =========================
+           BOOK CARD
+        ========================== */
+
+        .book-card {
+            background: rgba(255, 255, 255, 0.96);
+
+            padding: 25px;
+
+            border-radius: 18px;
+
+            border: 1px solid #eadfd3;
+
+            box-shadow:
+                0 9px 24px rgba(79, 56, 38, 0.11);
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+
+        .book-card:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 16px 32px rgba(79, 56, 38, 0.18);
+        }
+
+
+        .book-card h2 {
+            margin-top: 0;
+
+            margin-bottom: 8px;
+
+            color: #4f3524;
+
+            font-size: 25px;
+        }
+
+
+        .book-author {
+            margin: 0 0 6px;
+
+            color: #765741;
+
+            font-weight: 600;
+        }
+
+
+        .book-year {
+            margin-top: 0;
+
+            color: #806f60;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           STATUS
+        ========================== */
+
+        .status {
+            display: inline-block;
+
+            margin-top: 12px;
+
+            padding: 7px 12px;
+
+            border-radius: 20px;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+
+        .status.available {
+            background: #e3f2e8;
+
+            color: #287044;
+        }
+
+
+        .status.borrowed {
+            background: #f6e2df;
+
+            color: #a4473c;
+        }
+
+
+        /* =========================
+           BOOK ACTIONS
+        ========================== */
+
+        .book-actions {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 8px;
+
+            margin-top: 22px;
+
+            padding-top: 18px;
+
+            border-top: 1px solid #eee3d8;
+        }
+
+
+        .book-actions a {
+            display: inline-block;
+
+            padding: 8px 13px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            transition:
+                background-color 0.25s ease,
+                transform 0.25s ease;
+        }
+
+
+        .edit-button {
+            background: #f0e4d7;
+
+            color: #5a3e2b !important;
+        }
+
+
+        .edit-button:hover {
+            background: #e4d0bc;
+
+            transform: translateY(-2px);
+        }
+
+
+        .delete-button {
+            background: #f4e3e0;
+
+            color: #9d463e !important;
+        }
+
+
+        .delete-button:hover {
+            background: #edd0cc;
+
+            transform: translateY(-2px);
+        }
+
+
+        .return-button {
+            background: #e4efe7;
+
+            color: #2d7047 !important;
+        }
+
+
+        .return-button:hover {
+            background: #d2e5d9;
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================
+           BACK BUTTON
+        ========================== */
+
+        .back-button {
+            display: inline-block;
+
+            margin-top: 28px;
+
+            padding: 11px 17px;
+
+            background: #f0e4d7;
+
+            color: #5a3e2b !important;
+
+            border-radius: 9px;
+
+            font-weight: 600;
+
+            transition:
+                background-color 0.25s ease,
+                transform 0.25s ease;
+        }
+
+
+        .back-button:hover {
+            background: #dfccb9;
+
+            color: #4d3221 !important;
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================
+           EMPTY STATE
+        ========================== */
+
+        .empty-state {
+            grid-column: 1 / -1;
+
+            background: rgba(255, 255, 255, 0.95);
+
+            text-align: center;
+
+            padding: 45px 30px;
+
+            border-radius: 18px;
+
+            border: 1px solid #eadfd3;
+
+            transition:
+                transform 0.35s ease,
+                box-shadow 0.35s ease;
+        }
+
+
+        .empty-state:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 16px 32px rgba(79, 56, 38, 0.18);
+        }
+
+
+        .empty-state h2 {
+            color: #4a3424;
+        }
+
+
+        /* =========================
+           GENERAL CARD
+        ========================== */
+
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+
+            padding: 28px;
+
+            margin-bottom: 24px;
+
+            border: 1px solid #eadfd3;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 8px 25px rgba(79, 56, 38, 0.10);
+
+            transition:
+                transform 0.35s ease,
+                box-shadow 0.35s ease;
+        }
+
+
+        .card:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 16px 32px rgba(79, 56, 38, 0.17);
+        }
+
+
+        /* =========================
+           TEXT
+        ========================== */
+
+        h1 {
+            color: #4a3424;
+        }
+
+
+        h2 {
+            color: #674933;
+        }
+
+
+        p {
+            line-height: 1.7;
+        }
+
+
+        a {
+            color: #805637;
+
+            text-decoration: none;
+
+            font-weight: 600;
+        }
+
+
+        a:hover {
+            color: #5c3b27;
+        }
+
+
+        /* =========================
+           BUTTONS
+        ========================== */
+
+        button {
+            background: #805637;
+
+            color: white;
+
+            border: none;
+
+            padding: 12px 20px;
+
+            border-radius: 9px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            transition:
+                background-color 0.25s ease,
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+
+        button:hover {
+            background: #65432c;
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 7px 15px rgba(91, 62, 43, 0.22);
+        }
+
+
+        /* =========================
+           INPUTS
+        ========================== */
+
+        input,
+        select {
+            width: 100%;
+
+            max-width: 450px;
+
+            padding: 12px 14px;
+
+            border: 1px solid #d3c0ae;
+
+            border-radius: 9px;
+
+            background: #fffdfb;
+
+            color: #3d3026;
+
+            font-size: 15px;
+        }
+
+
+        input:focus,
+        select:focus {
+            outline: none;
+
+            border-color: #9a6b46;
+
+            box-shadow:
+                0 0 0 3px rgba(154, 107, 70, 0.15);
+        }
+
+
+        /* =========================
+           BOOK STATUS
+        ========================== */
+
+        .available {
+            color: #2d7a50;
+
+            font-weight: 700;
+        }
+
+
+        .borrowed {
+            color: #a4473c;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================
+           HOME HERO
+        ========================== */
+
+        .hero {
+            background: rgba(255, 255, 255, 0.91);
+
+            padding: 55px 50px;
+
+            border-radius: 22px;
+
+            border: 1px solid #eadfd3;
+
+            box-shadow:
+                0 15px 36px rgba(79, 56, 38, 0.14);
+
+            margin-bottom: 28px;
+
+            transition:
+                transform 0.35s ease,
+                box-shadow 0.35s ease;
+        }
+
+
+        .hero:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 18px 36px rgba(79, 56, 38, 0.18);
+        }
+
+
+        .hero-label {
+            color: #8b6245;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 12px;
+        }
+
+
+        .hero h1 {
+            font-size: 46px;
+
+            margin-bottom: 12px;
+        }
+
+
+        .hero p {
+            max-width: 650px;
+
+            color: #6f5b4b;
+
+            font-size: 18px;
+        }
+
+
+        .hero-actions {
+            display: flex;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+
+            margin-top: 28px;
+        }
+
+
+        .hero-actions a {
+            display: inline-block;
+
+            padding: 12px 20px;
+
+            border-radius: 9px;
+
+            transition: 0.25s ease;
+        }
+
+
+        .primary-button {
+            background: #805637;
+
+            color: white !important;
+        }
+
+
+        .primary-button:hover {
+            background: #65432c;
+
+            transform: translateY(-2px);
+        }
+
+
+        .secondary-button {
+            background: #f0e4d7;
+
+            color: #5a3e2b !important;
+        }
+
+
+        .secondary-button:hover {
+            background: #dfccb9;
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================
+           HOME STATISTICS
+        ========================== */
+
+        .stats-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 28px;
+        }
+
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.94);
+
+            padding: 24px;
+
+            border-radius: 16px;
+
+            border: 1px solid #eadfd3;
+
+            box-shadow:
+                0 8px 20px rgba(79, 56, 38, 0.10);
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 14px 28px rgba(79, 56, 38, 0.16);
+        }
+
+
+        .stat-card span {
+            display: block;
+
+            color: #8b6245;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            margin-bottom: 10px;
+        }
+
+
+        .stat-card strong {
+            color: #4b3424;
+
+            font-size: 32px;
+        }
+
+
+        .section-title {
+            margin-bottom: 16px;
+        }
+
+
+        .quick-links {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 18px;
+        }
+
+
+        .quick-link {
+            display: block;
+
+            background: rgba(255, 255, 255, 0.94);
+
+            padding: 24px;
+
+            border-radius: 16px;
+
+            border: 1px solid #eadfd3;
+
+            box-shadow:
+                0 8px 20px rgba(79, 56, 38, 0.10);
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+
+        .quick-link:hover {
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 14px 28px rgba(79, 56, 38, 0.16);
+        }
+
+
+        .quick-link h3 {
+            margin-top: 0;
+
+            color: #5a3e2b;
+        }
+
+
+        .quick-link p {
+            color: #705f50;
+
+            margin-bottom: 0;
+        }
+
+
+        /* =========================
+           FORM PAGE
+        ========================== */
+
+        .form-page {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 22px;
+        }
+
+
+        .form-intro-card {
+            width: 100%;
+
+            background: rgba(255, 255, 255, 0.96);
+
+            padding: 32px;
+
+            border-radius: 20px;
+
+            border: 1px solid #eadfd3;
+
+            box-shadow:
+                0 10px 28px rgba(79, 56, 38, 0.14);
+
+            transition:
+                transform 0.35s ease,
+                box-shadow 0.35s ease;
+        }
+
+
+        .form-intro-card:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 16px 32px rgba(79, 56, 38, 0.18);
+        }
+
+
+        .form-intro-card h1 {
+            margin: 0 0 10px;
+
+            color: #4a3424;
+
+            font-size: 38px;
+        }
+
+
+        .form-intro-card p {
+            margin: 0;
+
+            color: #705f50;
+
+            font-size: 16px;
+        }
+
+
+        .form-card {
+            width: 100%;
+
+            background: rgba(255, 255, 255, 0.96);
+
+            padding: 35px;
+
+            border-radius: 20px;
+
+            border: 1px solid #eadfd3;
+
+            box-shadow:
+                0 10px 28px rgba(79, 56, 38, 0.14);
+
+            transition:
+                transform 0.35s ease,
+                box-shadow 0.35s ease;
+        }
+
+
+        .form-card:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 16px 32px rgba(79, 56, 38, 0.18);
+        }
+
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #5a3e2b;
+
+            font-weight: 700;
+        }
+
+
+        .form-group input {
+            width: 100%;
+
+            max-width: none;
+        }
+
+
+        .form-actions {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-top: 30px;
+        }
+
+
+        .cancel-button {
+            display: inline-block;
+
+            padding: 12px 20px;
+
+            background: #f0e4d7;
+
+            color: #5a3e2b !important;
+
+            border-radius: 9px;
+
+            font-weight: 600;
+
+            transition:
+                background-color 0.25s ease,
+                transform 0.25s ease;
+        }
+
+
+        .cancel-button:hover {
+            background: #dfccb9;
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================
+           DELETE PAGE
+        ========================== */
+
+        .delete-page {
+            display: flex;
+
+            justify-content: center;
+        }
+
+
+        .delete-card {
+            width: 100%;
+
+            max-width: 700px;
+
+            text-align: center;
+
+            background: rgba(255, 255, 255, 0.97);
+
+            padding: 45px 40px;
+
+            border-radius: 22px;
+
+            border: 1px solid #eadfd3;
+
+            box-shadow:
+                0 12px 32px rgba(79, 56, 38, 0.15);
+
+            transition:
+                transform 0.35s ease,
+                box-shadow 0.35s ease;
+        }
+
+
+        .delete-card:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 18px 36px rgba(79, 56, 38, 0.18);
+        }
+
+
+        .delete-icon {
+            width: 58px;
+
+            height: 58px;
+
+            margin: 0 auto 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #f4e3e0;
+
+            color: #a4473c;
+
+            font-size: 32px;
+
+            font-weight: 700;
+        }
+
+
+        .delete-card h1 {
+            margin-bottom: 15px;
+        }
+
+
+        .delete-message {
+            color: #4d3a2c;
+
+            font-size: 17px;
+        }
+
+
+        .delete-warning {
+            color: #a4473c;
+
+            font-size: 14px;
+
+            margin-top: 10px;
+        }
+
+
+        .delete-actions {
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-top: 28px;
+        }
+
+
+        .delete-confirm {
+            background: #a4473c;
+        }
+
+
+        .delete-confirm:hover {
+            background: #87372f;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        footer {
+            text-align: center;
+
+            padding: 30px 20px;
+
+            color: #705f50;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width: 850px) {
+
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .quick-links {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            nav {
+                flex-wrap: wrap;
+
+                padding: 14px 18px;
+            }
+
+            nav a {
+                font-size: 14px;
+
+                padding: 8px 10px;
+            }
+
+            .container {
+                width: 94%;
+
+                margin: 30px auto;
+            }
+
+            .page-header {
+                padding: 24px;
+            }
+
+            .page-header h1 {
+                font-size: 32px;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 35px 25px;
+            }
+
+            .hero h1 {
+                font-size: 34px;
+            }
+
+            .search-form {
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+            .search-form input {
+                max-width: none;
+            }
+
+            .form-intro-card,
+            .form-card,
+            .delete-card {
+                padding: 28px 22px;
+            }
+
+            .form-actions,
+            .delete-actions {
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+            .form-actions a,
+            .delete-actions a,
+            .form-actions button,
+            .delete-actions button {
+                width: 100%;
+
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <nav>
+
+        <a href="{% url 'home' %}">
+            Home
+        </a>
+
+        <a href="{% url 'book_list' %}">
+            Books
+        </a>
+
+        <a href="{% url 'member_list' %}">
+            Members
+        </a>
+
+        <a href="{% url 'search_books' %}">
+            Search
+        </a>
+
+        <a href="{% url 'borrow_book' %}">
+            Borrow
+        </a>
+
+        <a href="{% url 'history_list' %}">
+            History
+        </a>
+
+        <a href="{% url 'statistics' %}">
+            Statistics
+        </a>
+
+    </nav>
+
+
+    <div class="container">
+
+        {% block content %}
+        {% endblock %}
+
+    </div>
+
+
+    <footer>
+
+        <p>
+            Library Management System
+        </p>
+
+    </footer>
+
+</body>
+
+</html>
